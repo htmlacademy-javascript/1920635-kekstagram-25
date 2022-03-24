@@ -7,11 +7,11 @@ const getRandomPositiveInteger = (a, b) => {
 
 const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0, elements.length - 1)];
 
-const checkString = (string, long) =>{
+/*const checkString = (string, long) =>{
   if (string.length > long){
     return false;
   }
   return true;
-};
+};*/
 
-export{getRandomArrayElement,getRandomPositiveInteger, checkString};
+export{getRandomArrayElement,getRandomPositiveInteger};
