@@ -1,15 +1,6 @@
-function getRandom(min, max) {
-  if (min >= 0 && max > min){
-    return Math.floor(Math.random() * (max-min)+min);
-  }
-}
-getRandom(0, 10);
+import {post, comment} from './data.js';
 
-
-function checkString (string, long){
-  if (string.length > long){
-    return false;
-  }
-  return true;
-}
-checkString('ss', 140);
+// eslint-disable-next-line no-console
+console.log(post());
+// eslint-disable-next-line no-console
+console.log(comment());
