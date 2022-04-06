@@ -1,6 +1,5 @@
-import {post, comment} from './data.js';
+
+import {getPictures} from './createPicture.js';
 
 // eslint-disable-next-line no-console
-console.log(post());
-// eslint-disable-next-line no-console
-console.log(comment());
+console.log(getPictures);
