@@ -18,14 +18,14 @@ const createComment = () => ({
   name: getRandomArrayElement(NAME),
 });
 
-const commentsArray = () => Array.from({ length: commentCount }, createComment);
+const getComments = () => Array.from({ length: commentCount }, createComment);
 
 const createPost = () => ({
   id: getRandomPositiveInteger(1, 25),
   url: `photos/${getRandomPositiveInteger(1, 25)}.jpg`,
   description: getRandomArrayElement(DESCRIPTION),
   likes: getRandomPositiveInteger(15, 200),
-  comments: commentsArray
+  comments: getComments()
 });
 
 const postArray = () => Array.from({ length: postCount }, createPost);
