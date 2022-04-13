@@ -1,58 +1,66 @@
-const hashtegInput = document.querySelector('.text__hashtags');
-const buttonUpload = document.querySelector('.img-upload__submit');
-const hashteg = hashtegInput.cloneNode(true);
+сonst form = document.querySelector('.img-upload__form');
+const hashtegInput = form.querySelector('.text__hashtags');
+const buttonUpload = form.querySelector('.img-upload__submit');
 
-const pristine = new Pristine(hashtegInput, {
+const pristine = new Pristine(form, {
   classTo: 'text__hashtags',
   errorClass: 'error__inner',
-  successClass: 'success__inner',
-  errorTextParent: '',
-  errorTextTag: '',
-  errorTextClass: ''
+  successClass: 'success__inner'
 }, false);
 
-pristine.addValidator(
-  hashtegInput,
-  (value) => {
-    if (value[0] === '#' && value.length > 1) {
-      return true;
+const createHashTeg = (value) => {
+  for (let i = 0; i < value.length; i++) {
+    if(!value[i] === ' '){
+    if (value[i] === '#' && /^[a-zA-Z0-9]+$/.test(value[i + 1])) {
+      const hashteg = document.createElement('li');
+      hashteg.classList.add('text__hashtags')
+      return hashteg;
     }
-  },
-  'Хэш-тег должен начинатся с символа # (решётка) и состоять не только из него');
+  }
+  }
+}
 
 pristine.addValidator(
   hashtegInput,
   (value) => {
-    const hashtegText = value.slice(1);
-    if (/^[a-zA-Z0-9]+$/.test(hashtegText)) {
-      return true;
-    }
-    return false;
+    return value[0] === '#' && value.length > 1;
   },
-  'Хэш-тег начинается с символа # (решётка)');
+  'Хэш-тег должен начинатся с символа # и иметь минимум один символ');
+
+pristine.addValidator(
+  hashtegInput,
+  (value) => {
+    for (let i = 0; i < value.length; i++) {
+      if (value[i] === '#') {
+        return /^[a-zA-Z0-9]+$/.test(value[i + 1]);
+      }
+    }
+  },
+  'Cтрока после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы ');
 
 pristine.addValidator(
   hashteg,
-  () => {
+  (value) => {
+    for (let i = 0; i < hashteg.value.length; i++) {
+    createHashTeg(hashteg.value[i]);
     const lowerCaseHashteg = hashteg.value.toLowerCase();
     if (lowerCaseHashteg === hashteg) {
       return false;
     }
-    return true;
+  }
   },
   'Такой хэш-тег уже есть');
 
-// pristine.addValidator(
-//   hashteg,
-//   (value) => {
-//     const lowerCaseHashteg = hashteg.value.toLowerCase();
-//     for(const i = 0; i <= value.length; i++){
-//     if (hashtegInput.value[i] === ' '){
-//       hashtegInput.value[i+1] === '#';
-//       return true;
-//     }
-//     return false},
-//  'Новый хеш-тег должен начинаться с символа #');
+pristine.addValidator(
+  hashteg,
+   (value) => {
+    for (const i = 0; i <= value.length; i++) {
+      if (hashtegInput.value[i] === ' ') {
+        return hashtegInput.value[i + 1] === '#';
+      }
+      'Новый хеш-тег должен начинаться с символа #';
+    }
+  });
 
 buttonUpload.addEventListener('submit', (evt) => {
   evt.preventDefault();
