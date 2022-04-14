@@ -1403,3 +1403,9 @@ main {
 .hidden {
   display: none;
 }
+
+.hashtag_error{
+  display: block;
+  font-size: 0.85em;
+  color: #c00;
+}

@@ -125,10 +125,12 @@
 
                 <!-- Добавление хэш-тегов и комментария к изображению -->
                 <fieldset class="img-upload__text text">
-                  <input class="text__hashtags" name="hashtags" placeholder="#ХэшТег" maxlength="20"
-                    data-pristine-maxlength-message="Максимальная длина 20 символов">
+                  <p class="hashtags">
+                  <input class="text__hashtags" name="hashtags" placeholder="#ХэшТег" maxlength="20">
+                  </p>
+                  <p class="hashtags">
                   <textarea class="text__description" name="description" placeholder="Ваш комментарий..."
-                    maxlength="140"></textarea>
+                    maxlength="140"></textarea></p>
                 </fieldset>
 
                 <!-- Кнопка для отправки данных на сервер -->
@@ -162,7 +164,7 @@
           </div>
 
           <!-- Комментарии к изображению -->
-          <div class="social__comment-count">5 из <span class="comments-count">125</span> комментариев</div>
+          <div class="social__comment-count"><span class="current-comment">5</span> из <span class="comments-count">125</span> комментариев</div>
           <ul class="social__comments">
             <li class="social__comment">
               <img class="social__picture" src="img/avatar-4.svg" alt="Аватар комментатора фотографии" width="35"
