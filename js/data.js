@@ -9,7 +9,7 @@ const MESSAGE = ['Всё отлично!',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 const NAME = ['Артем', 'Иван', 'Николай', 'Евгений', 'Роман'];
 const postCount = 25;
-const commentCount = 3;
+const commentCount = 11;
 
 const createComment = () => ({
   id: getRandomPositiveInteger(1, 1000),

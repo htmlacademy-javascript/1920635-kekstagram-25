@@ -1,4 +1,6 @@
 const body = document.querySelector('body');
+const hashtag = document.querySelector('.text__hashtags');
+const description = document.querySelector('.text__description');
 let currentModal;
 let currentCloseButton;
 
@@ -6,7 +8,7 @@ const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const isEnterKey = (evt) => evt.key === 'Enter';
 
-const closeModal = () =>{
+const closeModal = () => {
   currentModal.classList.add('hidden');
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onPopupEscKeydown);
@@ -23,10 +25,16 @@ function openModal(modal, closeButton) {
 }
 
 
-function onPopupEscKeydown (evt) {
+function onPopupEscKeydown(evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeModal();
   }
 }
-export {openModal, isEnterKey};
+hashtag.addEventListener('keydown', (evt)=> {
+  evt.stopPropagation();
+});
+description.addEventListener('keydown', (evt)=> {
+  evt.stopPropagation();
+});
+export { openModal, isEnterKey };

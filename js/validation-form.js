@@ -1,60 +1,78 @@
-const hashtegInput = document.querySelector('.text__hashtags');
-const buttonUpload = document.querySelector('.img-upload__submit');
-const hashteg = hashtegInput.cloneNode(true);
+const form = document.querySelector('.img-upload__form');
+const hashtagInput = document.querySelector('.text__hashtags');
 
-const pristine = new Pristine(hashtegInput, {
-  classTo: 'text__hashtags',
-  errorClass: 'error__inner',
-  successClass: 'success__inner',
-  errorTextParent: '',
-  errorTextTag: '',
-  errorTextClass: ''
+const pristine = new Pristine(form, {
+  classTo: 'hashtags',
+  errorClass: 'img-upload__text--invalid',
+  successClass: 'img-upload__text--valid',
+  errorTextParent: 'hashtags',
+  errorTextTag: 'span',
+  errorTextClass: 'hashtag_error'
 }, false);
 
-pristine.addValidator(
-  hashtegInput,
-  (value) => {
-    if (value[0] === '#' && value.length > 1) {
-      return true;
-    }
-  },
-  'Хэш-тег должен начинатся с символа # (решётка) и состоять не только из него');
+// Проверка на количество хэш-тегов
+const checkHashtagCount = (value) => value.split(' ').length <= 5;
 
 pristine.addValidator(
-  hashtegInput,
-  (value) => {
-    const hashtegText = value.slice(1);
-    if (/^[a-zA-Z0-9]+$/.test(hashtegText)) {
-      return true;
-    }
+  hashtagInput,
+  checkHashtagCount,
+  'Хэш-тегов должно быть не больше 5');
+
+// Хэш-тег должен начинаться с #
+const checkHashtegElement = (element) => {
+  if (element[0] !== '#') {
     return false;
-  },
-  'Хэш-тег начинается с символа # (решётка)');
+  }
+  for (let i = 1; i < element.length; i++) {
+    return /^[a-zA-Z0-9]+$/.test(element[i]);
+  }
+};
+
+const checkHashtagName = (value) => {
+  const hashtagArray = value.split(' ');
+  return hashtagArray.every(checkHashtegElement);
+};
+pristine.addValidator(
+  hashtagInput,
+  checkHashtagName,
+  'Хэш-тег должен начинаться с # и не включать в себя спецсимволы');
+
+//Хэш-тег должен иметь от 1 до 20 символов
+const checkHashtegElementLength = (element) => {
+  for (let i = 0; i < element.length; i++) {
+    return element.length > 1 && element.length <= 20;
+  }
+};
+const checkHashtagLength = (value) => {
+  const hashtagArray = value.split(' ');
+  return hashtagArray.every(checkHashtegElementLength);
+};
+pristine.addValidator(
+  hashtagInput,
+  checkHashtagLength,
+  'Хэш-тег должен иметь от 1 до 20 символов');
+
+// Такой хэш-тег уже есть
+const checkSame = (value) => {
+  const lowerCaseHashtag = value.toLowerCase();
+  const hashtagArray = lowerCaseHashtag.split(' ');
+  for (let i = 0; i < hashtagArray.length - 1; i++) {
+    for (let j = i + 1; j < hashtagArray.length; j++) {
+      if (hashtagArray[i] === hashtagArray[j]) {
+        return false; } }
+  }
+  return true;
+};
 
 pristine.addValidator(
-  hashteg,
-  () => {
-    const lowerCaseHashteg = hashteg.value.toLowerCase();
-    if (lowerCaseHashteg === hashteg) {
-      return false;
-    }
-    return true;
-  },
+  hashtagInput,
+  checkSame,
   'Такой хэш-тег уже есть');
 
-// pristine.addValidator(
-//   hashteg,
-//   (value) => {
-//     const lowerCaseHashteg = hashteg.value.toLowerCase();
-//     for(const i = 0; i <= value.length; i++){
-//     if (hashtegInput.value[i] === ' '){
-//       hashtegInput.value[i+1] === '#';
-//       return true;
-//     }
-//     return false},
-//  'Новый хеш-тег должен начинаться с символа #');
-
-buttonUpload.addEventListener('submit', (evt) => {
+// Валидация
+form.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  pristine.validate();
+  if (hashtagInput.value.length > 0) {
+    pristine.validate();
+  }
 });
