@@ -4,7 +4,6 @@ const bigPicture = document.querySelector('.big-picture');
 const commentsList = bigPicture.querySelector('.social__comments');
 const bigPictureUrl = bigPicture.querySelector('.big-picture__img');
 const bigPictureLikesCounter = bigPicture.querySelector('.likes-count');
-const bigPictureCommentsCount = bigPicture.querySelector('.comments-count');
 const bigPictureDiscription = bigPicture.querySelector('.social__caption');
 const commentItem = commentsList.querySelector('.social__comment');
 const closeButton = bigPicture.querySelector('.big-picture__cancel');
