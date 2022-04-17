@@ -7,7 +7,7 @@ const createPictureTemplate = document.querySelector('#picture').content.querySe
 
 const getPictures = postArray();
 
-const renderSimilarPicture = () => {
+const renderSimilarPicture=()=> {
   const createPictureFragment = document.createDocumentFragment();
   getPictures.forEach((post) => {
     const { url, likes, comments } = post;
@@ -26,5 +26,6 @@ const renderSimilarPicture = () => {
 const clearSimilarPicture = () => {
   similarPictureElement.innerHTML = '';
 };
+
 
 export { getPictures, renderSimilarPicture, clearSimilarPicture };

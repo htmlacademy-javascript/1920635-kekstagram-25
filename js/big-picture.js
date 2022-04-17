@@ -8,6 +8,7 @@ const bigPictureCommentsCount = bigPicture.querySelector('.comments-count');
 const bigPictureDiscription = bigPicture.querySelector('.social__caption');
 const commentItem = commentsList.querySelector('.social__comment');
 const commentsLoader = document.querySelector('.comments-loader');
+
 const closeButton = bigPicture.querySelector('.big-picture__cancel');
 let startComments = 0;
 
@@ -44,4 +45,4 @@ const showBigPicture = ({ url, likes, comments, description }) => {
   download(comments);
 };
 export { showBigPicture };
-//asldkaplsdkapsldka;sldka;sldka;lskda;slkdl;askd;askdlap;sld
+
