@@ -13,6 +13,7 @@ const imageUploadForm = document.querySelector('.img-upload__form');
 const imageUploadButton = document.querySelector('.img-upload__submit');
 const hashtagInput = document.querySelector('.text__hashtags');
 const descriptionInput = document.querySelector('.text__description');
+const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 let scaleNumber;
 
 //Добавляем индикаторы
@@ -141,6 +142,12 @@ changeEffectButtons.forEach((button) => {
 });
 
 imageUploadOpen.addEventListener('change', () => {
+  const file = imageUploadOpen.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+  if (matches) {
+    image.src = URL.createObjectURL(file);
+  }
   image.classList = '';
   scaleNumber = 100;
   image.classList.add(`scale-${scaleNumber}`);
