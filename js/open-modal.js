@@ -37,4 +37,4 @@ hashtag.addEventListener('keydown', (evt)=> {
 description.addEventListener('keydown', (evt)=> {
   evt.stopPropagation();
 });
-export { openModal, isEnterKey };
+export { openModal, isEnterKey, closeModal, isEscapeKey };

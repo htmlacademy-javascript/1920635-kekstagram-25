@@ -1,6 +1,10 @@
+import {closeModal} from './open-modal.js';
+import {setUserFormSubmit} from './upload-form.js';
+import {renderSimilarPicture} from './create-picture.js';
+import {getData} from './api.js';
 
-import {getPictures, renderSimilarPicture} from './create-picture.js';
+getData((post) => {
+  renderSimilarPicture(post);
+});
 
-// eslint-disable-next-line no-console
-console.log(getPictures);
-renderSimilarPicture();
+setUserFormSubmit(closeModal);

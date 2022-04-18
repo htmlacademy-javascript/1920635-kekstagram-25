@@ -1,22 +1,17 @@
 import { showBigPicture } from './big-picture.js';
-import { postArray } from './data.js';
-
 
 const similarPictureElement = document.querySelector('.pictures');
 const createPictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
-const getPictures = postArray();
-
-const renderSimilarPicture=()=> {
+const renderSimilarPicture=(post)=> {
   const createPictureFragment = document.createDocumentFragment();
-  getPictures.forEach((post) => {
-    const { url, likes, comments } = post;
+  post.forEach(({ url, likes, comments, description}) => {
     const pictureElement = createPictureTemplate.cloneNode(true);
     pictureElement.querySelector('.picture__img').src = url;
     pictureElement.querySelector('.picture__likes').textContent = likes;
     pictureElement.querySelector('.picture__comments').textContent = comments.length;
     pictureElement.addEventListener('click', () => {
-      showBigPicture(post);
+      showBigPicture({ url, likes, comments,description });
     });
     createPictureFragment.appendChild(pictureElement);
   });
@@ -28,4 +23,4 @@ const clearSimilarPicture = () => {
 };
 
 
-export { getPictures, renderSimilarPicture, clearSimilarPicture };
+export {renderSimilarPicture, clearSimilarPicture };
