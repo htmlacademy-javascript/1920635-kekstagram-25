@@ -1,4 +1,6 @@
+import { sendData } from './api.js';
 import { openModal } from './open-modal.js';
+import { showAlert, showSuccess } from './util.js';
 const imageUploadOpen = document.querySelector('#upload-file');
 const imageUploadClose = document.querySelector('#upload-cancel');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
@@ -7,6 +9,10 @@ const scaleBiggerButton = document.querySelector('.scale__control--bigger');
 const scaleValue = document.querySelector('.scale__control--value');
 const imageContainer = document.querySelector('.img-upload__preview');
 const image = imageContainer.querySelector('img');
+const imageUploadForm = document.querySelector('.img-upload__form');
+const imageUploadButton = document.querySelector('.img-upload__submit');
+const hashtagInput = document.querySelector('.text__hashtags');
+const descriptionInput = document.querySelector('.text__description');
 let scaleNumber;
 
 //Добавляем индикаторы
@@ -135,12 +141,57 @@ changeEffectButtons.forEach((button) => {
 });
 
 imageUploadOpen.addEventListener('change', () => {
-  image.classList.remove(`scale-${scaleNumber}`);
+  image.classList = '';
   scaleNumber = 100;
   image.classList.add(`scale-${scaleNumber}`);
   image.classList.add('effects__preview--none');
+  image.setAttribute('style', 'filter: none');
   slider.setAttribute('disabled', true);
+  hashtagInput.value = '';
+  descriptionInput.value = '';
   scaleValue.value = `${String(scaleNumber)}%`;
   imageContainer.className = 'img-upload__preview';
   openModal(uploadOverlay, imageUploadClose);
 });
+
+const pristine = new Pristine(imageUploadForm, {
+  classTo: 'img-upload__form',
+  errorClass: 'img-upload__form--invalid',
+  successClass: 'img-upload__form--valid',
+}, false);
+
+const blockSubmitButton = () => {
+  imageUploadButton.disabled = true;
+  imageUploadButton.textContent = 'Загружаем...';
+};
+
+const unblockSubmitButton = () => {
+  imageUploadButton.disabled = false;
+  imageUploadButton.textContent = 'Сохранить';
+};
+
+
+const setUserFormSubmit = (onSuccess) => {
+  imageUploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if (isValid) {
+      blockSubmitButton();
+      sendData(
+        () => {
+          onSuccess();
+          showSuccess();
+          unblockSubmitButton();
+        },
+        () => {
+          onSuccess();
+          showAlert();
+          unblockSubmitButton();
+        },
+        new FormData(evt.target),
+      );
+    }
+  });
+};
+
+export { setUserFormSubmit };
