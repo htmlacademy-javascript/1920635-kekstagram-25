@@ -1,4 +1,9 @@
 import { openModal } from './open-modal.js';
+const COMMENTS_COUNT = 5;
+
+let count = 0;
+let handleCommentsLoader;
+
 const bigPicture = document.querySelector('.big-picture');
 const commentsList = bigPicture.querySelector('.social__comments');
 const bigPictureUrl = bigPicture.querySelector('.big-picture__image');
@@ -9,10 +14,8 @@ const commentItem = commentsList.querySelector('.social__comment');
 const closeButton = bigPicture.querySelector('.big-picture__cancel');
 const commentsLoader = document.querySelector('.comments-loader');
 const commentsCounter = document.querySelector('.current-comment');
-let count = 0;
-let handleCommentsLoader;
 
-
+// Генерация комментариев
 const createComment = (comment) => {
   const commentElement = commentItem.cloneNode(true);
   const commentImage = commentElement.querySelector('.social__picture');
@@ -22,15 +25,16 @@ const createComment = (comment) => {
   return commentElement;
 };
 
+// Загрузка комментариев на страницу
 const downloadComment=(comments) => {
-  let finishCount = count + 5;
+  let finishCount = count + COMMENTS_COUNT;
   if (finishCount > comments.length) {
     finishCount = comments.length;
   }
   for (let i = count; i < finishCount; i++) {
     commentsList.appendChild(createComment(comments[i]));
   }
-  count += 5;
+  count += COMMENTS_COUNT;
   commentsCounter.textContent = finishCount;
   if (count >= comments.length) {
     commentsLoader.classList.add('hidden');
@@ -39,6 +43,7 @@ const downloadComment=(comments) => {
   }
 };
 
+// Показать большую картинку
 const showBigPicture = ({ url, likes, comments, description }) => {
   bigPictureUrl.src = url;
   bigPictureLikesCounter.textContent = likes;

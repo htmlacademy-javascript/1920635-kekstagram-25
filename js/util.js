@@ -1,5 +1,13 @@
 import { isEscapeKey } from './open-modal.js';
 
+const ALERT_SHOW_TIME = 5000;
+
+const successTemplate = document.querySelector('#success').content.querySelector('.success');
+const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+const closeTemplateSuccess = successTemplate.querySelector('.success__button');
+const closeTemplateError = errorTemplate.querySelector('.error__button');
+
+// Генерация рандомного числа и элемента массива
 const getRandomPositiveInteger = (a, b) => {
   const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
   const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
@@ -9,12 +17,7 @@ const getRandomPositiveInteger = (a, b) => {
 
 const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0, elements.length - 1)];
 
-const successTemplate = document.querySelector('#success').content.querySelector('.success');
-const errorTemplate = document.querySelector('#error').content.querySelector('.error');
-const closeTemplateSuccess = successTemplate.querySelector('.success__button');
-const closeTemplateError = errorTemplate.querySelector('.error__button');
-const ALERT_SHOW_TIME = 5000;
-
+// Показать сообщение об ошибке загрузки
 const showAlert = () => {
   document.body.append('beforeend',errorTemplate);
   closeTemplateError.addEventListener('click', ()=>{
@@ -37,6 +40,7 @@ const showAlert = () => {
   }, ALERT_SHOW_TIME);
 };
 
+// Показать сообщение об успехе загрузки
 const showSuccess = () => {
   document.body.append('beforeend',successTemplate);
   closeTemplateSuccess.addEventListener('click', ()=>{

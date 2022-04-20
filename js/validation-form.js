@@ -1,3 +1,5 @@
+let hashtagValidate = true;
+
 const form = document.querySelector('.img-upload__form');
 const hashtagInput = document.querySelector('.text__hashtags');
 
@@ -18,14 +20,16 @@ pristine.addValidator(
   checkHashtagCount,
   'Хэш-тегов должно быть не больше 5');
 
-// Хэш-тег должен начинаться с #
+// Хэш-тег должен начинаться с # и не включать в себя спецсимволы
 const checkHashtegElement = (element) => {
-  if (element[0] !== '#') {
-    return false;
-  }
-  for (let i = 1; i < element.length; i++) {
-    return /^[a-zA-Z0-9]+$/.test(element[i]);
-  }
+  if (element.length > 0) {
+    if (element[0] !== '#') {
+      return false;
+    }
+    for (let i = 1; i < element.length; i++) {
+      return /^[a-zA-Z0-9]+$/.test(element[i]);
+    }
+  } return true;
 };
 
 const checkHashtagName = (value) => {
@@ -37,15 +41,18 @@ pristine.addValidator(
   checkHashtagName,
   'Хэш-тег должен начинаться с # и не включать в себя спецсимволы');
 
-//Хэш-тег должен иметь от 1 до 20 символов
+// Хэш-тег должен иметь до 20 символов
 const checkHashtegElementLength = (element) => {
   for (let i = 0; i < element.length; i++) {
-    return element.length > 1 && element.length <= 20;
+    return element.length <= 20;
   }
 };
 const checkHashtagLength = (value) => {
-  const hashtagArray = value.split(' ');
-  return hashtagArray.every(checkHashtegElementLength);
+  if (value !== '') {
+    const hashtagArray = value.split(' ');
+    return hashtagArray.every(checkHashtegElementLength);
+  }
+  return true;
 };
 pristine.addValidator(
   hashtagInput,
@@ -59,7 +66,9 @@ const checkSame = (value) => {
   for (let i = 0; i < hashtagArray.length - 1; i++) {
     for (let j = i + 1; j < hashtagArray.length; j++) {
       if (hashtagArray[i] === hashtagArray[j]) {
-        return false; } }
+        return false;
+      }
+    }
   }
   return true;
 };
@@ -72,7 +81,14 @@ pristine.addValidator(
 // Валидация
 form.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  if (hashtagInput.value.length > 0) {
-    pristine.validate();
-  }
+  hashtagValidate = pristine.validate();
 });
+
+// Сброс валидации
+const resetValidate = () => {
+  pristine.reset();
+};
+form.addEventListener('change', resetValidate);
+
+export { hashtagValidate, resetValidate };
+
