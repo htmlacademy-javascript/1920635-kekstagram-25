@@ -1,15 +1,17 @@
 import { showBigPicture } from './big-picture.js';
 import { getRandomArrayElement } from './util.js';
 
+let randomArrays = [];
+let filters = [];
+
 const similarPictureElement = document.querySelector('.pictures');
 const createPictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const imageFilters = document.querySelector('.img-filters');
 const filterDiscussed = document.getElementById('filter-discussed');
 const filterRandom = document.getElementById('filter-random');
 const filterDefault = document.getElementById('filter-default');
-let randomArray = [];
-let filter = [];
 
+// Создаем пост
 const renderSimilarPicture = (post) => {
   document.querySelectorAll('.picture').forEach((picture) => {
     picture.remove();
@@ -30,33 +32,38 @@ const renderSimilarPicture = (post) => {
   similarPictureElement.appendChild(createPictureFragment);
 };
 
-const randomPost = (post, count) => {
+// Показать рандомные посты
+const getRandomPosts = (post, count) => {
   filterRandom.addEventListener('click', () => {
-    for (let i = 0; i < 25; i++) {
-      randomArray.push(getRandomArrayElement(post));
+    for (let i = 0; i < post.length; i++) {
+      randomArrays.push(getRandomArrayElement(post));
     }
-    filter = Array.from(new Set(randomArray));
-    renderSimilarPicture(filter.slice(0, count));
-    randomArray = [];
+    filters = Array.from(new Set(randomArrays));
+    renderSimilarPicture(filters.slice(0, count));
+    randomArrays = [];
   });
 };
-const defaultPost = (post) => {
+
+// Показать посты по умолчанию
+const getdefaultPost = (post) => {
   filterDefault.addEventListener('click', () => {
     renderSimilarPicture(post);
   });
 };
+
+// Сравнить количество комментариев под постом
 const compareCommentsCount = (postA, postB) => {
   const commentsA = postA.comments.length;
   const commentsB = postB.comments.length;
   return commentsB - commentsA;
 };
 
-const commentsCountPost = (post) => {
+// Показать посты по количеству комментариев
+const getcommentsCountPost = (post) => {
   filterDiscussed.addEventListener('click', () => {
     const countPost = post.slice().sort(compareCommentsCount);
     renderSimilarPicture(countPost);
   });
 };
 
-
-export { renderSimilarPicture, commentsCountPost, randomPost, defaultPost };
+export { renderSimilarPicture, getcommentsCountPost, getRandomPosts, getdefaultPost };

@@ -1,6 +1,15 @@
 import { sendData } from './api.js';
 import { openModal } from './open-modal.js';
 import { showAlert, showSuccess } from './util.js';
+import { hashtagValidate, resetValidate } from './validation-form.js';
+
+const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+const MAX_SCALE = 100;
+const MIN_SCALE = 25;
+let scaleNumber;
+let effectClass;
+let lastClass;
+
 const imageUploadOpen = document.querySelector('#upload-file');
 const imageUploadClose = document.querySelector('#upload-cancel');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
@@ -13,37 +22,35 @@ const imageUploadForm = document.querySelector('.img-upload__form');
 const imageUploadButton = document.querySelector('.img-upload__submit');
 const hashtagInput = document.querySelector('.text__hashtags');
 const descriptionInput = document.querySelector('.text__description');
-const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
-let scaleNumber;
+const changeEffectButtons = document.querySelectorAll('.effects__radio');
+const slider = document.querySelector('.effect-level__slider');
+const effectLevel = document.querySelector('.effect-level__value');
 
-//Добавляем индикаторы
-
+// Уменьшить размер загружаемой фотографии
 const scaleSmaller = () => {
-  if (scaleNumber <= 100 && scaleNumber > 25) {
+  if (scaleNumber <= MAX_SCALE && scaleNumber > MIN_SCALE) {
     image.classList.remove(`scale-${scaleNumber}`);
     scaleNumber -= 25;
     scaleValue.value = `${String(scaleNumber)}%`;
     image.classList.add(`scale-${scaleNumber}`);
   }
 };
+
+// Увеличить размер загружаемой фотографии
 const scaleBigger = () => {
   image.classList.remove(`scale-${scaleNumber}`);
-  if (scaleNumber < 100 && scaleNumber >= 25) {
+  if (scaleNumber < MAX_SCALE && scaleNumber >= MIN_SCALE) {
     scaleNumber += 25;
     scaleValue.value = `${String(scaleNumber)}%`;
     image.classList.add(`scale-${scaleNumber}`);
   }
 };
-
+// Изменить размер загружаемой фотографии
 scaleSmallerButton.addEventListener('click', scaleSmaller);
 scaleBiggerButton.addEventListener('click', scaleBigger);
 scaleValue.value = `${String(100)}%`;
-// Эффекты
-const changeEffectButtons = document.querySelectorAll('.effects__radio');
-const slider = document.querySelector('.effect-level__slider');
-const effectLevel = document.querySelector('.effect-level__value');
-let effectClass;
-let lastClass;
+
+// Добавление слайдера
 noUiSlider.create(slider, {
   range: {
     min: 0,
@@ -53,6 +60,7 @@ noUiSlider.create(slider, {
   step: 0.1
 });
 
+// Изменение эффектов в зависимости от значения слайдера
 slider.noUiSlider.on('update', () => {
   effectLevel.value = slider.noUiSlider.get();
   switch (lastClass) {
@@ -74,9 +82,10 @@ slider.noUiSlider.on('update', () => {
   }
 });
 
+// Смена эффекта
 changeEffectButtons.forEach((button) => {
   button.addEventListener('change', () => {
-    slider.removeAttribute('disabled');
+    slider.classList.remove('hidden');
     image.classList = '';
     image.classList.add(`scale-${scaleNumber}`);
     image.classList.add(`effects__preview--${button.value}`);
@@ -84,7 +93,7 @@ changeEffectButtons.forEach((button) => {
     lastClass = effectClass.pop();
     switch (lastClass) {
       case 'effects__preview--none':
-        slider.setAttribute('disabled', true);
+        slider.classList.add('hidden');
         image.setAttribute('style', 'filter: none');
         break;
       case 'effects__preview--chrome':
@@ -141,6 +150,7 @@ changeEffectButtons.forEach((button) => {
   });
 });
 
+// Загрузить фотографию
 imageUploadOpen.addEventListener('change', () => {
   const file = imageUploadOpen.files[0];
   const fileName = file.name.toLowerCase();
@@ -150,17 +160,19 @@ imageUploadOpen.addEventListener('change', () => {
   }
   image.classList = '';
   scaleNumber = 100;
+  slider.classList.add('hidden');
   image.classList.add(`scale-${scaleNumber}`);
   image.classList.add('effects__preview--none');
-  image.setAttribute('style', 'filter: none');
-  slider.setAttribute('disabled', true);
   hashtagInput.value = '';
+  image.setAttribute('style', 'filter: none');
   descriptionInput.value = '';
+  resetValidate();
   scaleValue.value = `${String(scaleNumber)}%`;
   imageContainer.className = 'img-upload__preview';
   openModal(uploadOverlay, imageUploadClose);
 });
 
+// Проверка загрузки фото
 const pristine = new Pristine(imageUploadForm, {
   classTo: 'img-upload__form',
   errorClass: 'img-upload__form--invalid',
@@ -182,7 +194,7 @@ const setUserFormSubmit = (onSuccess) => {
   imageUploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const isValid = pristine.validate();
-    if (isValid) {
+    if (isValid && hashtagValidate) {
       blockSubmitButton();
       sendData(
         () => {
