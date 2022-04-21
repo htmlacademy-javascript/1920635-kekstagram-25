@@ -25,6 +25,7 @@ const descriptionInput = document.querySelector('.text__description');
 const changeEffectButtons = document.querySelectorAll('.effects__radio');
 const slider = document.querySelector('.effect-level__slider');
 const effectLevel = document.querySelector('.effect-level__value');
+const effectValueSlider = document.querySelector('.img-upload__effect-level');
 
 // Уменьшить размер загружаемой фотографии
 const scaleSmaller = () => {
@@ -86,6 +87,7 @@ slider.noUiSlider.on('update', () => {
 changeEffectButtons.forEach((button) => {
   button.addEventListener('change', () => {
     slider.classList.remove('hidden');
+    effectValueSlider.classList.remove('hidden');
     image.classList = '';
     image.classList.add(`scale-${scaleNumber}`);
     image.classList.add(`effects__preview--${button.value}`);
@@ -94,6 +96,7 @@ changeEffectButtons.forEach((button) => {
     switch (lastClass) {
       case 'effects__preview--none':
         slider.classList.add('hidden');
+        effectValueSlider.classList.add('hidden');
         image.setAttribute('style', 'filter: none');
         break;
       case 'effects__preview--chrome':
@@ -152,25 +155,31 @@ changeEffectButtons.forEach((button) => {
 
 // Загрузить фотографию
 imageUploadOpen.addEventListener('change', () => {
+  slider.classList.add('hidden');
+  effectValueSlider.classList.add('hidden');
   const file = imageUploadOpen.files[0];
   const fileName = file.name.toLowerCase();
   const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
   if (matches) {
     image.src = URL.createObjectURL(file);
   }
-  image.classList = '';
   scaleNumber = 100;
-  slider.classList.add('hidden');
   image.classList.add(`scale-${scaleNumber}`);
-  image.classList.add('effects__preview--none');
-  hashtagInput.value = '';
-  image.setAttribute('style', 'filter: none');
-  descriptionInput.value = '';
-  resetValidate();
   scaleValue.value = `${String(scaleNumber)}%`;
   imageContainer.className = 'img-upload__preview';
   openModal(uploadOverlay, imageUploadClose);
 });
+
+const clearInput = ()=> {
+  image.src = '';
+  image.classList = '';
+  hashtagInput.value = '';
+  descriptionInput.value = '';
+  imageUploadOpen.value = '';
+  image.classList.add('effects__preview--none');
+  image.setAttribute('style', 'filter: none');
+  resetValidate();
+};
 
 // Проверка загрузки фото
 const pristine = new Pristine(imageUploadForm, {
@@ -189,7 +198,7 @@ const unblockSubmitButton = () => {
   imageUploadButton.textContent = 'Сохранить';
 };
 
-
+// Отправка фото на сервер
 const setUserFormSubmit = (onSuccess) => {
   imageUploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
@@ -201,11 +210,13 @@ const setUserFormSubmit = (onSuccess) => {
           onSuccess();
           showSuccess();
           unblockSubmitButton();
+          clearInput();
         },
         () => {
           onSuccess();
           showAlert();
           unblockSubmitButton();
+          clearInput();
         },
         new FormData(evt.target),
       );
