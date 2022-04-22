@@ -27,7 +27,7 @@ const checkHashtegElement = (element) => {
       return false;
     }
     for (let i = 1; i < element.length; i++) {
-      return /^[a-zA-Z0-9]+$/.test(element[i]);
+      return /^[a-zA-Z0-9-а-яА-ЯЁё]+$/.test(element[i]);
     }
   } return true;
 };
