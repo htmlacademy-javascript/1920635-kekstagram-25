@@ -170,7 +170,7 @@ imageUploadOpen.addEventListener('change', () => {
   openModal(uploadOverlay, imageUploadClose);
 });
 
-const clearInput = ()=> {
+const clearInput = () => {
   image.src = '';
   image.classList = '';
   hashtagInput.value = '';
